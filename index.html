@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note Taking App</title>
+    <style>
+       body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f2f2f2;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    color: #333;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 20px auto;
+    display: block;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 600px;
+}
+
+li {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+li:hover {
+    background-color: #f9f9f9;
+}
+
+    </style>
+</head>
+<body>
+    <h1>Note Taking App</h1>
+    <button id="newNoteBtn">New Note</button>
+    <ul id="notesList"></ul>
+
+    <!-- Add JavaScript code here -->
+    <script>
+    // Retrieve notes from local storage when the page loads
+    window.onload = function() {
+        displayNotes();
+    };
+
+    // Function to display notes from local storage
+    function displayNotes() {
+        var notesList = document.getElementById('notesList');
+        notesList.innerHTML = ''; // Clear the existing list
+
+        // Retrieve notes from local storage
+        var notes = JSON.parse(localStorage.getItem('notes')) || [];
+
+        // Display each note in the list
+        notes.forEach(function(note, index) {
+            var li = document.createElement('li');
+            li.textContent = note;
+            li.setAttribute('data-index', index);
+            li.onclick = editNote;
+            notesList.appendChild(li);
+        });
+    }
+
+    // Function to handle editing a note
+    function editNote() {
+        var index = this.getAttribute('data-index');
+        var notes = JSON.parse(localStorage.getItem('notes')) || [];
+
+        var updatedNote = prompt('Edit your note:', notes[index]);
+
+        // Update the note if the user entered new content
+        if (updatedNote !== null) {
+            notes[index] = updatedNote;
+            localStorage.setItem('notes', JSON.stringify(notes));
+            displayNotes();
+        }
+    }
+
+    // Event listener for the "New Note" button
+    document.getElementById('newNoteBtn').addEventListener('click', function() {
+        var newNote = prompt('Enter your new note:');
+        if (newNote !== null) {
+            var notes = JSON.parse(localStorage.getItem('notes')) || [];
+            notes.push(newNote);
+            localStorage.setItem('notes', JSON.stringify(notes));
+            displayNotes();
+        }
+    });
+</script>
+</body>
+</html>
